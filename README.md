@@ -1,4 +1,4 @@
-# Ansible Role: postgresql_ha
+# Ansible Role: docker
 Install and configure docker and docker-compose (community edition)
 
 ## Requirements
