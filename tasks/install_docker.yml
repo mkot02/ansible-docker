@@ -1,0 +1,63 @@
+---
+# tasks file for kubernetes
+
+- name: Add docker-ce repository
+  template:
+    src: docker-ce.repo.j2
+    dest: /etc/yum.repos.d/docker-ce.repo
+    owner: root
+    group: root
+    mode: 0644
+    
+# Block with HTTP_PROXY env
+- block:
+  - name: Install docker prerequisites
+    yum:
+      name:
+        - lvm2
+        - device-mapper-persistent-data
+      state: present
+  
+  - name: Install docker-ce
+    yum:
+      name: "docker-ce-{{ docker_version }}.ce"
+      state: present
+    notify: Enable and start docker service
+  
+  - name: Install docker module for Python
+    pip:
+      name: docker
+  environment: # end of block
+    http_proxy: "{{ http_proxy }}"
+    https_proxy: "{{ https_proxy }}"
+
+- name: Create docker group
+  group:
+    name: docker
+    state: present
+
+- name: Add users to docker group
+  user:
+    name: "{{ item }}"
+    groups: docker
+    append: true
+    state: present
+  loop: "{{ docker_users }}"
+
+- name: Create docker configuration directory
+  file:
+    name: /etc/docker
+    owner: root
+    group: docker
+    mode: 0775
+    state: directory
+
+- name: Configure docker
+  template:
+    src: docker_daemon.json.j2
+    dest: /etc/docker/daemon.json
+    owner: root
+    group: docker
+    mode: 0664
+  notify: Restart docker service
+

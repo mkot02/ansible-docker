@@ -1,0 +1,19 @@
+---
+
+- name: Enable and start docker service
+  systemd:
+    name: "{{ docker_service }}"
+    enabled: yes
+    state: started 
+
+- name: Restart docker service
+  systemd:
+    name: "{{ docker_service }}"
+    daemon_reload: yes
+    state: restarted 
+
+- name: Stop docker service
+  systemd:
+    name: "{{ docker_service }}"
+    state: stopped
+
