@@ -17,6 +17,6 @@ docker_service: docker.service
 # ----------------------------------------------------------------------------
 # Docker Compose settings
 # ----------------------------------------------------------------------------
-docker_compose_install: yes
+docker_compose_install: no
 docker_compose_version: 1.24.1
 docker_compose_path: /usr/local/bin
