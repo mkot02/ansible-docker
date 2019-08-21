@@ -30,6 +30,7 @@
   environment: # end of block
     http_proxy: "{{ http_proxy }}"
     https_proxy: "{{ https_proxy }}"
+    no_proxy: "{{ no_proxy }}"
 
 - name: Create docker group
   group:
@@ -60,4 +61,14 @@
     group: docker
     mode: 0664
   notify: Restart docker service
+
+- name: Configure docker.service
+  template:
+    src: docker_daemon.json.j2
+    dest: /etc/docker/daemon.json
+    owner: root
+    group: docker
+    mode: 0664
+  notify: Restart docker service
+
 
