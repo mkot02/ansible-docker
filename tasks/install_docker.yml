@@ -1,5 +1,4 @@
 ---
-# tasks file for kubernetes
 
 - name: Add docker-ce repository
   template:
@@ -64,11 +63,9 @@
 
 - name: Configure docker.service
   template:
-    src: docker_daemon.json.j2
-    dest: /etc/docker/daemon.json
+    src: docker.service.j2
+    dest: /etc/systemd/system/docker.service
     owner: root
     group: docker
     mode: 0664
   notify: Restart docker service
-
-
