@@ -16,6 +16,20 @@
         - lvm2
         - device-mapper-persistent-data
       state: present
+
+  - name: Install container-selinux package
+    yum:
+      name: container-selinux
+      state: present
+    ignore_errors: yes
+    register: __container_selinux_status
+
+  - name: Install container-selinux 2.107-1 package from CentOS repo
+    yum:
+      name: http://mirror.centos.org/centos/7/extras/x86_64/Packages/container-selinux-2.107-1.el7_6.noarch.rpm
+      disable_gpg_check: yes
+      state: present
+    when: __container_selinux_status.rc != 0
   
   - name: Install docker-ce
     yum:
